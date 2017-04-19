@@ -1,0 +1,142 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/jorrit/gulp-requirejs">gulp-requirejs (v0.4.0)</a>
+</h1>
+<h4>Builds projects using require.js's optimizer</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-requirejs">module gulp-requirejs</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-requirejs.gulp-requirejs">
+            function <span class="apidocSignatureSpan"></span>gulp-requirejs
+            <span class="apidocSignatureSpan">(opts)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-requirejs" id="apidoc.module.gulp-requirejs">module gulp-requirejs</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-requirejs.gulp-requirejs" id="apidoc.element.gulp-requirejs.gulp-requirejs">
+        function <span class="apidocSignatureSpan"></span>gulp-requirejs
+        <span class="apidocSignatureSpan">(opts)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">gulp-requirejs = function (opts) {
+
+    'use strict';
+
+    if (!opts) {
+        throw new PluginError(PLUGIN_NAME, 'Missing options array!');
+    }
+
+    if (!opts.out &amp;&amp; typeof opts.out !== 'string') {
+        throw new PluginError(PLUGIN_NAME, 'Only single file outputs are supported right now, please pass a valid output file name
+!');
+    }
+
+    if (!opts.baseUrl) {
+        throw new PluginError(PLUGIN_NAME, 'Pipeing dirs/files is not supported right now, please specify the base path for your
+ script.');
+    }
+
+    // create the stream and save the file name (opts.out will be replaced by a callback function later)
+    var _s       = es.pause(),
+        _fName   = opts.out,
+        _success = function(text, buildResponse, sourceMap) {
+            var newFile = new File({
+                path: _fName,
+                contents: new Buffer(text)
+            });
+            // Add a string containing the list of added dependencies for
+            // debugging purposes.
+            newFile.buildResponse = buildResponse.replace('FUNCTION', _fName);
+            if (sourceMap) {
+                newFile.sourceMap = JSON.parse(sourceMap);
+            }
+            _s.write(newFile);
+            _s.resume();
+            _s.end();
+        },
+        _error   = function(error) {
+            _s.emit('error', new PluginError(PLUGIN_NAME, error));
+        };
+
+    // just a small wrapper around the r.js optimizer, we write a new gutil.File (vinyl) to the Stream, mocking a file, which can
+ be handled
+    // regular gulp plugins (i hope...).
+
+    optimize(opts, _success, _error);
+
+    // return the stream for chain .pipe()ing
+    return _s;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
